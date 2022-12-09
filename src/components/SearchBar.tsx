@@ -1,16 +1,23 @@
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 export default function SearchBar({
-  searchQuery,
+  initialSearchQuery,
   includeFilterOptions = true,
 }: {
-  searchQuery?: string;
+  initialSearchQuery?: string;
   includeFilterOptions?: Boolean;
 }) {
   const searchText = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!searchText.current || !initialSearchQuery) {
+      return;
+    }
+    searchText.current.value = initialSearchQuery;
+  }, []);
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -61,7 +68,6 @@ export default function SearchBar({
             placeholder="Search for movies"
             aria-label="Search for movies"
             name="movies"
-            value={searchQuery}
             ref={searchText}
           />
           <button

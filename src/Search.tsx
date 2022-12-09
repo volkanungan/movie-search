@@ -71,7 +71,7 @@ export default function Search() {
 
   return (
     <div>
-      <Header searchQuery={searchQuery} />
+      <Header initialSearchQuery={searchQuery} />
       <MovieList moviesByYear={groupedMovies} />
     </div>
   );
