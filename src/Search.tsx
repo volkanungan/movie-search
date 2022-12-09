@@ -12,6 +12,7 @@ export default function Search() {
   const useQueryParams = () => new URLSearchParams(useLocation().search);
   let queryParams = useQueryParams();
   const searchQuery = queryParams.get('title') ?? '';
+  const searchType = queryParams.get('type');
 
   const worker = new Worker(
     new URL('./helpers/groupMoviesByYear.ts', import.meta.url),
@@ -29,7 +30,7 @@ export default function Search() {
     });
   }, [worker]);
 
-  const results = useQuery(['search', searchQuery], fetchMovies, {
+  const results = useQuery(['search', searchQuery, searchType], fetchMovies, {
     onSuccess: (data) => {
       if (data?.Response === 'False' || data?.Search?.length === 0) {
         return;
@@ -42,7 +43,11 @@ export default function Search() {
   });
 
   if (searchQuery.length === 0) {
-    return <ErrorMessage>No search query given</ErrorMessage>;
+    return (
+      <ErrorMessage searchQuery={searchQuery}>
+        No search query given
+      </ErrorMessage>
+    );
   }
 
   if (results.isLoading) {
@@ -53,7 +58,11 @@ export default function Search() {
     results.data?.Response === 'False' ||
     results.data?.Search?.length === 0
   ) {
-    return <ErrorMessage>Sorry, no movies have been found.</ErrorMessage>;
+    return (
+      <ErrorMessage searchQuery={searchQuery}>
+        Sorry, no movies have been found.
+      </ErrorMessage>
+    );
   }
 
   if (!groupedMovies) {
@@ -62,7 +71,7 @@ export default function Search() {
 
   return (
     <div>
-      <Header />
+      <Header searchQuery={searchQuery} />
       <MovieList moviesByYear={groupedMovies} />
     </div>
   );

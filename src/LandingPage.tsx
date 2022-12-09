@@ -11,7 +11,7 @@ export default function LandingPage() {
         className="text-8xl text-sizzling-red drop-shadow-xl"
         aria-hidden="true"
       />
-      <SearchBar />
+      <SearchBar includeFilterOptions={false} />
     </div>
   );
 }
