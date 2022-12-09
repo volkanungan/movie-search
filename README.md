@@ -14,5 +14,8 @@ npm run test
 ```
 
 ## See in action
+Already deployed to [https://volkanungan.github.io/movie-search/](https://volkanungan.github.io/movie-search/)
 
-Already deployed to [(https://volkanungan.github.io/movie-search/)](https://volkanungan.github.io/movie-search/)
+
+### To-do
+- Movie details page
