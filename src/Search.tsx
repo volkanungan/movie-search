@@ -13,9 +13,12 @@ export default function Search() {
   let queryParams = useQueryParams();
   const searchQuery = queryParams.get('title') ?? '';
 
-  const worker = new Worker('src/helpers/groupMoviesByYear.ts', {
-    type: 'module',
-  });
+  const worker = new Worker(
+    new URL('./helpers/groupMoviesByYear.ts', import.meta.url),
+    {
+      type: 'module',
+    }
+  );
 
   useEffect(() => {
     worker.addEventListener('message', (message) => {
