@@ -7,7 +7,7 @@ export default function SearchBar({
   includeFilterOptions = true,
 }: {
   searchQuery?: string;
-  includeFilterOptions: Boolean;
+  includeFilterOptions?: Boolean;
 }) {
   const searchText = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();

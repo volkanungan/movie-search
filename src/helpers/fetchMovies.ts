@@ -4,7 +4,7 @@ const API_KEY = '1672fa38';
 
 const fetchMovies: QueryFunction<
   MovieSearchAPIResponse,
-  ['search', string, string?]
+  ['search', string, string | null]
 > = async ({ queryKey }) => {
   const title = queryKey[1];
   const type = queryKey[2];
