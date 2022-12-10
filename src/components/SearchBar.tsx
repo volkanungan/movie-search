@@ -5,9 +5,11 @@ import { useRef, useEffect } from 'react';
 export default function SearchBar({
   initialSearchQuery,
   includeFilterOptions = true,
+  searchType,
 }: {
   initialSearchQuery?: string;
   includeFilterOptions?: Boolean;
+  searchType?: string;
 }) {
   const searchText = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -79,30 +81,57 @@ export default function SearchBar({
             {/* Show text instead of icon for screen readers */}
           </button>
         </div>
-        {includeFilterOptions && (
-          <ul className="flex flex-row gap-6 text-sm text-slate-gray sm:ml-4 mt-2 font-alternative font-bold tracking-wider">
-            <a href="#" onClick={(e) => onFilterClick(e)}>
-              <li className="border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red">
-                All
-              </li>
-            </a>
-            <a href="#" onClick={(e) => onFilterClick(e, 'movies')}>
-              <li className="border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red">
-                Movies
-              </li>
-            </a>
-            <a href="#" onClick={(e) => onFilterClick(e, 'series')}>
-              <li className="border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red">
-                Series
-              </li>
-            </a>
-            <a href="#" onClick={(e) => onFilterClick(e, 'episode')}>
-              <li className="border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red">
-                Episode
-              </li>
-            </a>
-          </ul>
-        )}
+        <>
+          {includeFilterOptions && (
+            <ul className="flex flex-row gap-6 text-sm text-slate-gray sm:ml-4 mt-2 font-alternative font-bold tracking-wider">
+              <a href="#" onClick={(e) => onFilterClick(e)}>
+                <li
+                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
+                    !searchType
+                      ? 'border-sizzling-red text-sizzling-red'
+                      : 'border-baby-powder'
+                  }`}
+                >
+                  All
+                </li>
+              </a>
+              <a href="#" onClick={(e) => onFilterClick(e, 'movie')}>
+                <li
+                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
+                    searchType === 'movie'
+                      ? 'border-sizzling-red text-sizzling-red'
+                      : 'border-baby-powder'
+                  }`}
+                >
+                  Movies
+                </li>
+              </a>
+              <a href="#" onClick={(e) => onFilterClick(e, 'series')}>
+                <li
+                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
+                    searchType === 'series'
+                      ? 'border-sizzling-red text-sizzling-red'
+                      : 'border-baby-powder'
+                  }`}
+                >
+                  Series
+                </li>
+              </a>
+              <a href="#" onClick={(e) => onFilterClick(e, 'episode')}>
+                <li
+                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
+                    searchType === 'episode'
+                      ? 'border-sizzling-red text-sizzling-red'
+                      : 'border-baby-powder'
+                  }`}
+                >
+                  {' '}
+                  Episode
+                </li>
+              </a>
+            </ul>
+          )}
+        </>
       </form>
     </div>
   );

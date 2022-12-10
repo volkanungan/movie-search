@@ -12,7 +12,7 @@ export default function Search() {
   const useQueryParams = () => new URLSearchParams(useLocation().search);
   let queryParams = useQueryParams();
   const searchQuery = queryParams.get('title') ?? '';
-  const searchType = queryParams.get('type');
+  const searchType = queryParams.get('type') ?? '';
 
   const worker = new Worker(
     new URL('./helpers/groupMoviesByYear.ts', import.meta.url),
@@ -44,7 +44,7 @@ export default function Search() {
 
   if (searchQuery.length === 0) {
     return (
-      <ErrorMessage searchQuery={searchQuery}>
+      <ErrorMessage searchQuery={searchQuery} searchType={searchType}>
         No search query given
       </ErrorMessage>
     );
@@ -59,7 +59,7 @@ export default function Search() {
     results.data?.Search?.length === 0
   ) {
     return (
-      <ErrorMessage searchQuery={searchQuery}>
+      <ErrorMessage searchQuery={searchQuery} searchType={searchType}>
         Sorry, no movies have been found.
       </ErrorMessage>
     );
@@ -71,7 +71,7 @@ export default function Search() {
 
   return (
     <div>
-      <Header initialSearchQuery={searchQuery} />
+      <Header initialSearchQuery={searchQuery} searchType={searchType} />
       <MovieList moviesByYear={groupedMovies} />
     </div>
   );
