@@ -6,7 +6,7 @@ export default function Header({
   initialSearchQuery,
   searchType,
 }: {
-  initialSearchQuery: string;
+  initialSearchQuery?: string;
   searchType?: string;
 }) {
   return (

@@ -43,11 +43,7 @@ export default function Search() {
   });
 
   if (searchQuery.length === 0) {
-    return (
-      <ErrorMessage searchQuery={searchQuery} searchType={searchType}>
-        No search query given
-      </ErrorMessage>
-    );
+    return <ErrorMessage>No search query given</ErrorMessage>;
   }
 
   if (results.isLoading) {

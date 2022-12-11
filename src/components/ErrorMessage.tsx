@@ -1,14 +1,16 @@
 import Header from './Header';
 
+type ErrorMessageProps = {
+  children: React.ReactNode;
+  searchQuery?: string;
+  searchType?: string;
+};
+
 export default function ErrorMessage({
   children,
   searchQuery,
   searchType,
-}: {
-  children: React.ReactNode;
-  searchQuery: string;
-  searchType?: string;
-}) {
+}: ErrorMessageProps) {
   return (
     <div>
       <Header initialSearchQuery={searchQuery} searchType={searchType} />

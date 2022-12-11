@@ -1,16 +1,23 @@
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { useRef, useEffect } from 'react';
+import SearchFilters from './SearchFilters';
+
+type ReactFormOrMouseEvent =
+  | React.FormEvent<HTMLFormElement>
+  | React.MouseEvent<HTMLAnchorElement, MouseEvent>;
+
+type SearchBarProps = {
+  initialSearchQuery?: string;
+  includeFilterOptions?: Boolean;
+  searchType?: string;
+};
 
 export default function SearchBar({
   initialSearchQuery,
   includeFilterOptions = true,
   searchType,
-}: {
-  initialSearchQuery?: string;
-  includeFilterOptions?: Boolean;
-  searchType?: string;
-}) {
+}: SearchBarProps) {
   const searchText = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
@@ -21,42 +28,25 @@ export default function SearchBar({
     searchText.current.value = initialSearchQuery;
   }, []);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(e: ReactFormOrMouseEvent, videoType?: string) {
     e.preventDefault();
-    performRegularSearch();
-  }
-
-  function performRegularSearch() {
     if (!searchText.current?.value || searchText.current.value?.length === 0) {
       return;
     }
-    navigate({
-      pathname: '/search',
-      search: createSearchParams({
-        title: searchText.current.value,
-      }).toString(),
-    });
+    performSearch(searchText.current.value, videoType);
   }
 
-  function onFilterClick(
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    type?: string
-  ) {
-    e.preventDefault();
-    if (!type) {
-      performRegularSearch();
-      return;
-    }
-    if (!searchText.current?.value || searchText.current.value.length === 0) {
-      return;
-    }
-
+  function performSearch(searchText: string, videoType?: string) {
     navigate({
       pathname: '/search',
-      search: createSearchParams({
-        title: searchText.current.value,
-        type,
-      }).toString(),
+      search: createSearchParams(
+        Object.assign(
+          {
+            title: searchText,
+          },
+          videoType && { type: videoType }
+        )
+      ).toString(),
     });
   }
 
@@ -83,53 +73,7 @@ export default function SearchBar({
         </div>
         <>
           {includeFilterOptions && (
-            <ul className="flex flex-row gap-6 text-sm text-slate-gray sm:ml-4 mt-2 font-alternative font-bold tracking-wider">
-              <a href="#" onClick={(e) => onFilterClick(e)}>
-                <li
-                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
-                    !searchType
-                      ? 'border-sizzling-red text-sizzling-red'
-                      : 'border-baby-powder'
-                  }`}
-                >
-                  All
-                </li>
-              </a>
-              <a href="#" onClick={(e) => onFilterClick(e, 'movie')}>
-                <li
-                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
-                    searchType === 'movie'
-                      ? 'border-sizzling-red text-sizzling-red'
-                      : 'border-baby-powder'
-                  }`}
-                >
-                  Movies
-                </li>
-              </a>
-              <a href="#" onClick={(e) => onFilterClick(e, 'series')}>
-                <li
-                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
-                    searchType === 'series'
-                      ? 'border-sizzling-red text-sizzling-red'
-                      : 'border-baby-powder'
-                  }`}
-                >
-                  Series
-                </li>
-              </a>
-              <a href="#" onClick={(e) => onFilterClick(e, 'episode')}>
-                <li
-                  className={`border-b-2 px-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
-                    searchType === 'episode'
-                      ? 'border-sizzling-red text-sizzling-red'
-                      : 'border-baby-powder'
-                  }`}
-                >
-                  {' '}
-                  Episode
-                </li>
-              </a>
-            </ul>
+            <SearchFilters searchType={searchType} onFilterClick={onSubmit} />
           )}
         </>
       </form>

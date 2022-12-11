@@ -10,7 +10,7 @@ const fetchMovies: QueryFunction<
   const type = queryKey[2];
 
   if (!title || title.length === 0) {
-    throw new Error('Seach parameter title cannot be null');
+    throw new Error('Seach parameter "title" cannot be null');
   }
 
   const apiRes = await fetch(
