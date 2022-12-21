@@ -16,27 +16,51 @@ addEventListener('message', (message) => {
 function groupAndPost(movies: Movie[]) {
   // Sort the arrays first based on their year so same-year movies will be adjacent to each other
   const sortedMovies = sortMoviesByYear(movies);
-
   // Then group them and return as MoviesByYear[]
   const groupedMovies = groupMoviesByYear(sortedMovies);
 
   postMessage(groupedMovies);
 }
 
-// "1996" -> 1996
-// "1996–2012" -> 2012
-// "1996–" -> Current year since this is still ongoing
-function getLastYear(string: string) {
-  const trimmedYear = string.includes('–') ? string.split('–')[1] : string;
-  return Number(trimmedYear === '' ? new Date().getFullYear() : trimmedYear);
+function timeOfProduction(year: string) {
+  let isRange, startingYear, endingYear;
+  if (year.includes('–')) {
+    isRange = true;
+    [startingYear, endingYear = new Date().getFullYear()] = year.split('–');
+    endingYear = endingYear === '' ? new Date().getFullYear() : endingYear;
+  } else {
+    isRange = false;
+    startingYear = endingYear = year;
+  }
+  return {
+    isRange,
+    startingYear: Number(startingYear),
+    endingYear: Number(endingYear),
+  };
 }
 
 function sortMoviesByYear(movies: Movie[]) {
   return [...movies].sort((a, b) => {
-    if (getLastYear(b.Year) > getLastYear(a.Year)) {
+    const years = {
+      a: timeOfProduction(a.Year),
+      b: timeOfProduction(b.Year),
+    };
+    if (years.b.endingYear > years.a.endingYear) {
       return 1;
     }
-    return -1;
+    if (years.b.endingYear < years.a.endingYear) {
+      return -1;
+    }
+    if (!years.a.isRange && !years.b.isRange) {
+      return 0;
+    }
+    if (years.a.isRange && !years.b.isRange) {
+      return 1;
+    }
+    if (!years.a.isRange && years.b.isRange) {
+      return -1;
+    }
+    return years.a.startingYear > years.b.startingYear ? -1 : 1;
   });
 }
 
@@ -56,6 +80,6 @@ function groupMoviesByYear(sortedMovies: Movie[]) {
 
 export const exportedForTesting = {
   groupMoviesByYear,
-  getLastYear,
+  timeOfProduction,
   sortMoviesByYear,
 };
