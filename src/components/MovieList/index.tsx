@@ -1,6 +1,6 @@
 import MovieItem from './MovieItem';
 import { BiCameraMovie } from 'react-icons/bi';
-import { Movie } from '../helpers/APIResponsesTypes';
+import { Movie } from '../../lib/APIResponsesTypes';
 
 interface MoviesByYear {
   year: string;

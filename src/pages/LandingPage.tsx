@@ -1,5 +1,5 @@
 import { FaFilm } from 'react-icons/fa';
-import SearchBar from './components/SearchBar';
+import SearchBar from '../components/SearchBar/SearchBar';
 
 export default function LandingPage() {
   return (

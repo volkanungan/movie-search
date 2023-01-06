@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 type MovieItemProps = {
   imdbID: string;
   poster: string;
@@ -14,18 +16,25 @@ export default function MovieItem({
 }: MovieItemProps) {
   return (
     <li className="flex flex-row my-5 gap-x-4 items-center">
-      <img
-        data-testid="thumbnail"
-        src={poster === 'N/A' ? './film-solid.svg' : poster}
-        alt={`Poster of ${title}`}
-        className="rounded-md border-2 border-solid border-slate-gray shadow-lg"
-        width="92"
-        height="136"
-      />
+      <Link to={`../movie/${imdbID}`}>
+        <img
+          data-testid="thumbnail"
+          src={poster === 'N/A' ? './film-solid.svg' : poster}
+          alt={`Poster of ${title}`}
+          className="rounded-md border-2 border-solid border-slate-gray shadow-lg"
+          width="92"
+          height="136"
+        />
+      </Link>
       <div>
-        <h2 className="sm:text-lg font-bold font-alternative tracking-wider">
-          {title}
-        </h2>
+        <Link
+          to={`../movie/${imdbID}`}
+          className=" hover:text-sizzling-red hover:underline focus:text-sizzling-red focus:underline transition-all"
+        >
+          <h2 className="sm:text-lg font-boldfont-alternative tracking-wider">
+            {title}
+          </h2>
+        </Link>
         <p className="text-slate-gray capitalize italic text-sm">{type}</p>
         <a href={`https://www.imdb.com/title/${imdbID}`} target="_blank">
           <img

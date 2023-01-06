@@ -18,7 +18,7 @@ export default function SearchFilters({
         onClick={(e) => onFilterClick(e)}
         className={`capitalize border-b-2 px-3 py-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
           !searchType
-            ? 'text-sizzling-red bg-gray-200 rounded-lg  hover:border-baby-powder focus:border-baby-powder'
+            ? 'text-sizzling-red bg-gray-200 rounded-lg hover:border-baby-powder focus:border-baby-powder'
             : 'border-baby-powder'
         }`}
       >
@@ -31,7 +31,7 @@ export default function SearchFilters({
           onClick={(e) => onFilterClick(e, videoType)}
           className={`capitalize border-b-2 px-3 py-1 border-baby-powder hover:border-sizzling-red hover:text-sizzling-red  focus:border-sizzling-red focus:text-sizzling-red ${
             searchType === videoType
-              ? 'text-sizzling-red bg-gray-200 rounded-lg  hover:border-baby-powder focus:border-baby-powder'
+              ? 'text-sizzling-red bg-gray-200 rounded-lg hover:border-baby-powder focus:border-baby-powder'
               : 'border-baby-powder'
           }`}
         >

@@ -1,4 +1,4 @@
-import { Movie } from './APIResponsesTypes';
+import { Movie } from '../APIResponsesTypes';
 
 interface MoviesByYear {
   year: string;

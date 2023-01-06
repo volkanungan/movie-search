@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { Movie } from './APIResponsesTypes';
+import { Movie } from '../APIResponsesTypes';
 import { exportedForTesting } from './groupMoviesByYear';
 const { timeOfProduction, sortMoviesByYear, groupMoviesByYear } =
   exportedForTesting;
