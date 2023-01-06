@@ -14,7 +14,7 @@ export default function MovieDetails({
           data-testid="thumbnail"
           src={movie.Poster === 'N/A' ? './film-solid.svg' : movie.Poster}
           alt={`Poster of ${movie.Title}`}
-          className="sm:w-52 md:w-64 rounded-md border-2 border-solid border-slate-gray shadow-lg"
+          className="sm:w-44 md:w-64 rounded-md border-2 border-solid border-slate-gray shadow-lg"
         />
         <div className="px-5">
           <Header
@@ -35,7 +35,7 @@ export default function MovieDetails({
           />
         </div>
       </div>
-      <dl className="mx-5 my-8 md:mx-12 max-w-3xl flex justify-center gap-x-4">
+      <dl className="mx-5 mt-8 mb-12 md:mx-12 max-w-3xl flex justify-center gap-x-4">
         {movie.Ratings.map((rating) => (
           <div
             className="text-center border-x-sizzling-red border-x-2 px-2 rounded-lg"
