@@ -12,7 +12,10 @@ export default function Header({
   return (
     <div className="flex justify-center md:justify-start gap-x-4 md:gap-x-12 mx-5 md:mx-12 items-top mt-8 border-b-2 pb-4">
       <Link to="/">
-        <FaFilm className="text-5xl text-sizzling-red drop-shadow-xl" />
+        <FaFilm
+          className="text-5xl text-sizzling-red drop-shadow-xl"
+          aria-label="Landing page"
+        />
       </Link>
       <SearchBar
         initialSearchQuery={initialSearchQuery}
