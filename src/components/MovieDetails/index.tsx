@@ -38,7 +38,7 @@ export default function MovieDetails({
       <dl className="mx-5 mt-8 mb-12 lg:mx-auto max-w-3xl flex justify-center gap-x-4 px-12">
         {movie.Ratings.map((rating) => (
           <div
-            className="text-center border-x-sizzling-red border-x-2 px-2 rounded-lg"
+            className="text-center border-x-sizzling-red border-x-2 px-2 rounded-lg flex flex-col justify-around"
             key={`${rating.Source}`}
           >
             <dd className="text-2xl text-bistre">{rating.Value}</dd>
