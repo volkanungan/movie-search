@@ -1,4 +1,5 @@
 import { Movie } from '../APIResponsesTypes';
+const cache = new Map();
 
 interface MoviesByYear {
   year: string;
@@ -14,11 +15,17 @@ addEventListener('message', (message) => {
 // Even though this function takes two turns (first sort, and then reduce), the complexity
 // is still O(n logn) since sort is O(n logn) and reduce is O(n)
 function groupAndPost(movies: Movie[]) {
+  if (cache.has(JSON.stringify(movies))) {
+    postMessage(cache.get(JSON.stringify(movies)));
+    return;
+  }
+
   // Sort the arrays first based on their year so same-year movies will be adjacent to each other
   const sortedMovies = sortMoviesByYear(movies);
   // Then group them and return as MoviesByYear[]
   const groupedMovies = groupMoviesByYear(sortedMovies);
 
+  cache.set(JSON.stringify(movies), groupedMovies);
   postMessage(groupedMovies);
 }
 

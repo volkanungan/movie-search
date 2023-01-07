@@ -21,16 +21,10 @@ export default function SearchBar({
   const searchText = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!searchText.current || !initialSearchQuery) {
-      return;
-    }
-    searchText.current.value = initialSearchQuery;
-  }, []);
-
   function onSubmit(e: ReactFormOrMouseEvent, videoType?: string) {
     e.preventDefault();
     if (!searchText.current?.value || searchText.current.value?.length === 0) {
+      searchText.current && searchText.current.focus();
       return;
     }
     performSearch(searchText.current.value, videoType);
@@ -61,6 +55,7 @@ export default function SearchBar({
             aria-label="Search for movies"
             name="movies"
             ref={searchText}
+            defaultValue={initialSearchQuery}
           />
           <button
             className="btn inline-block px-6 py-2.5 bg-black text-baby-powder font-medium text-xs leading-tight uppercase rounded-r-lg shadow-md hover:bg-bistre border-black border-solid border-2 hover:border-sizzling-red focus:border-sizzling-red hover:shadow-lg focus:bg-bistre focus:shadow-lg focus:outline-none focus:ring-0 active:bistre active:shadow-lg transition duration-150 ease-in-out items-center"

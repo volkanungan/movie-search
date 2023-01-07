@@ -13,7 +13,7 @@ export default function MovieList({
   moviesByYear: MoviesByYear[];
 }) {
   return (
-    <ol className="mx-5 md:mx-14 ">
+    <ol className="mx-5 max-w-7xl xl:mx-auto px-12">
       {moviesByYear.map((movieYear) => (
         <li className="border-b-2 last:border-b-0 my-4" key={movieYear.year}>
           <h2 className="font-bold font-header text-xl text-middle-gray drop-shadow-lg">

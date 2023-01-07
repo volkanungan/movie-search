@@ -16,8 +16,8 @@ import Movie from './pages/Movie';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 0,
-      cacheTime: 0,
+      staleTime: 10 * (60 * 1000),
+      cacheTime: 15 * (60 * 1000),
     },
   },
 });
