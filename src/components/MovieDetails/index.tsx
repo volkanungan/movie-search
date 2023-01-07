@@ -9,7 +9,7 @@ export default function MovieDetails({
 }) {
   return (
     <>
-      <div className="mx-5 mt-5 xl:mx-auto max-w-3xl flex justify-between items-center flex-col sm:flex-row sm:items-start">
+      <div className="sm:mx-5 mt-5 xl:mx-auto max-w-3xl flex justify-between items-center flex-col sm:flex-row sm:items-start">
         <img
           data-testid="thumbnail"
           src={movie.Poster === 'N/A' ? './film-solid.svg' : movie.Poster}
@@ -35,7 +35,7 @@ export default function MovieDetails({
           />
         </div>
       </div>
-      <dl className="mx-5 mt-8 mb-12 xl:mx-auto max-w-3xl flex justify-center gap-x-4 px-12">
+      <dl className="mx-5 mt-8 mb-12 lg:mx-auto max-w-3xl flex justify-center gap-x-4 px-12">
         {movie.Ratings.map((rating) => (
           <div
             className="text-center border-x-sizzling-red border-x-2 px-2 rounded-lg"
