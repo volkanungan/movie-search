@@ -14,11 +14,11 @@ export default function Header({
   genres,
 }: HeaderProps) {
   return (
-    <>
-      <h2 className="text-center font-header sm:text-end font-extrabold text-2xl mt-4 drop-shadow-md">
+    <div className="text-center">
+      <h2 className="font-header sm:text-end font-extrabold text-2xl mt-4 drop-shadow-md">
         {title}
       </h2>
-      <p className="text-center sm:text-end text-sl drop-shadow-md text-slate">
+      <p className="sm:text-end text-sl drop-shadow-md text-slate">
         {year} ∙ Rated {rated} ∙ {runtime}
       </p>
       <div className="sm:text-end mt-3">
@@ -31,6 +31,6 @@ export default function Header({
           </span>
         ))}
       </div>
-    </>
+    </div>
   );
 }
