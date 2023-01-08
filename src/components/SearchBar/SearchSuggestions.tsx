@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { MovieSearchAPIResponse } from '../../lib/APIResponsesTypes';
+import { MovieSearchAPIResponse } from '../../lib/types/APIResponsesTypes';
 import { SuggestionsAction } from '../../lib/reducer/searchSuggestions';
 export const MAX_SUGGESTIONS = 5;
 

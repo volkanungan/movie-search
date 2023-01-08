@@ -1,4 +1,4 @@
-import { Movie } from '../APIResponsesTypes';
+import { Movie } from '../types/APIResponsesTypes';
 const cache = new Map();
 
 interface MoviesByYear {

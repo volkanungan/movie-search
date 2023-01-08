@@ -1,4 +1,4 @@
-import { MovieDetailsAPIResponse } from '../../lib/APIResponsesTypes';
+import { MovieDetailsAPIResponse } from '../../lib/types/APIResponsesTypes';
 import Badges from './Badges';
 import Header from './Header';
 

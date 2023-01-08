@@ -1,5 +1,5 @@
 import { QueryFunction } from '@tanstack/react-query';
-import { MovieDetailsAPIResponse } from '../APIResponsesTypes';
+import { MovieDetailsAPIResponse } from '../types/APIResponsesTypes';
 const API_KEY = '1672fa38';
 
 const fetchMovies: QueryFunction<

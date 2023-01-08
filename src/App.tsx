@@ -9,7 +9,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import LandingPage from './pages/LandingPage';
+import Landing from './pages/Landing';
 import Search from './pages/Search';
 import Movie from './pages/Movie';
 
@@ -30,7 +30,7 @@ function App() {
           <Routes>
             <Route path="/movie/:id" element={<Movie />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<Landing />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </QueryClientProvider>
