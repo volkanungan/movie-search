@@ -1,9 +1,12 @@
-import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
-import { useRef, useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 import SearchFilters from './SearchFilters';
 import { useQuery } from '@tanstack/react-query';
 import fetchSearchSuggestions from '../../lib/fetch/fetchSearchSuggestions';
+import { performSearch, throttle } from '../../lib/search/search';
+import { MovieSearchAPIResponse } from '../../lib/APIResponsesTypes';
+import reducer from '../../lib/reducer/searchSuggestions';
 
 type ReactFormOrMouseEvent =
   | React.FormEvent<HTMLFormElement>
@@ -17,6 +20,11 @@ type SearchBarProps = {
 
 const MAX_SUGGESTIONS = 5;
 
+const initialState = {
+  suggestionsQuery: '',
+  activeSuggestionIndex: -1,
+};
+
 export default function SearchBar({
   initialSearchQuery,
   includeFilterOptions = true,
@@ -25,8 +33,7 @@ export default function SearchBar({
   const searchText = useRef<HTMLInputElement>(null);
   const suggestionsList = useRef<HTMLUListElement>(null);
   const navigate = useNavigate();
-  const [suggestionsQuery, setSuggestionsQuery] = useState('');
-  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   function onSubmit(e: ReactFormOrMouseEvent, videoType?: string) {
     e.preventDefault();
@@ -34,62 +41,38 @@ export default function SearchBar({
       searchText.current && searchText.current.focus();
       return;
     }
-    performSearch(searchText.current.value, videoType);
+    performSearch(navigate, searchText.current.value, videoType);
   }
 
-  function performSearch(searchText: string, videoType?: string) {
-    navigate({
-      pathname: '/search',
-      search: createSearchParams(
-        Object.assign(
-          {
-            title: searchText,
-          },
-          videoType && { type: videoType }
-        )
-      ).toString(),
-    });
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+  function onKeyDown(
+    e: React.KeyboardEvent<HTMLInputElement>,
+    suggestionsCount: number
+  ) {
     if (!suggestions.data) {
       return;
     }
     if (e.key === 'ArrowUp') {
-      if (activeSuggestionIndex < 1) {
-        return;
-      }
-      setActiveSuggestionIndex((suggestionIndex) => suggestionIndex - 1);
+      dispatch({ type: 'pressed_key_up' });
     } else if (e.key === 'ArrowDown') {
-      if (
-        activeSuggestionIndex ===
-        Math.min(suggestions.data.Search.length, MAX_SUGGESTIONS) - 1
-      ) {
-        return;
-      }
-      setActiveSuggestionIndex((suggestionIndex) => suggestionIndex + 1);
+      dispatch({ type: 'pressed_key_down', payload: { suggestionsCount } });
     } else if (e.key === 'Enter') {
       navigate(
-        `../movie/${suggestions.data.Search[activeSuggestionIndex].imdbID}`
+        `../movie/${
+          suggestions.data.Search[state.activeSuggestionIndex].imdbID
+        }`
       );
     }
   }
 
-  let throttleId: NodeJS.Timeout;
-  function throttle(text: string) {
-    if (throttleId) {
-      clearTimeout(throttleId);
-    }
-    throttleId = setTimeout(() => {
-      setActiveSuggestionIndex(-1);
-      setSuggestionsQuery(text);
-    }, 300);
-  }
-
   const suggestions = useQuery(
-    ['search-suggestions', suggestionsQuery],
+    ['search-suggestions', state.suggestionsQuery],
     fetchSearchSuggestions
   );
+
+  const suggestionsCount =
+    suggestions.data?.Response == 'True'
+      ? Math.min(suggestions.data.Search.length, MAX_SUGGESTIONS)
+      : 0;
 
   return (
     <div className="md:w-96">
@@ -103,33 +86,44 @@ export default function SearchBar({
             name="movies"
             ref={searchText}
             defaultValue={initialSearchQuery}
-            onChange={(e) => throttle(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onChange={(e) => throttle(e.target.value, dispatch)}
+            onKeyDown={(e) => onKeyDown(e, suggestionsCount)}
           />
-          {suggestions.data?.Response == 'True' && (
+          {suggestionsCount > 0 && (
             <div className="bg-baby-powder border border-solid w-full h-34 absolute top-12 z-10 rounded shadow-lg">
               <ul
                 className="leading-7 text-base font-alternative"
                 ref={suggestionsList}
               >
-                {suggestions.data.Search.slice(0, MAX_SUGGESTIONS).map(
-                  (suggestion, index) => (
-                    <Link
-                      to={`../movie/${suggestion.imdbID}`}
-                      onFocus={() => setActiveSuggestionIndex(index)}
+                {(suggestions.data as MovieSearchAPIResponse).Search.slice(
+                  0,
+                  MAX_SUGGESTIONS
+                ).map((suggestion, index) => (
+                  <Link
+                    to={`../movie/${suggestion.imdbID}`}
+                    onFocus={() =>
+                      dispatch({
+                        type: 'tabbed_on_suggestion',
+                        payload: index,
+                      })
+                    }
+                  >
+                    <li
+                      onMouseEnter={() =>
+                        dispatch({
+                          type: 'hovered_on_suggestion',
+                          payload: index,
+                        })
+                      }
+                      className={`px-3 text-ellipsis overflow-hidden whitespace-nowrap ${
+                        index === state.activeSuggestionIndex &&
+                        `bg-middle-gray text-baby-powder text-bold`
+                      } `}
                     >
-                      <li
-                        onMouseEnter={() => setActiveSuggestionIndex(index)}
-                        className={`px-3 ${
-                          index === activeSuggestionIndex &&
-                          `bg-middle-gray text-baby-powder text-bold`
-                        } `}
-                      >
-                        {suggestion.Title}
-                      </li>
-                    </Link>
-                  )
-                )}
+                      {suggestion.Title}
+                    </li>
+                  </Link>
+                ))}
               </ul>
             </div>
           )}

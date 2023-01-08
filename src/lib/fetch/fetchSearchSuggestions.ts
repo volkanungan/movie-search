@@ -8,11 +8,7 @@ const fetchSearchSuggestions: QueryFunction<
 > = async ({ queryKey }) => {
   const title = queryKey[1];
 
-  if (!title || title.length === 0) {
-    throw new Error('Seach parameter "title" cannot be null');
-  }
-
-  if (title.length < 3) {
+  if (!title || title.length < 3) {
     return [];
   }
 
