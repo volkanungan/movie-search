@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
-import { useReducer, useRef, useState } from 'react';
+import { useReducer, useRef } from 'react';
 import SearchFilters from './SearchFilters';
 import { useQuery } from '@tanstack/react-query';
 import fetchSearchSuggestions from '../../lib/fetch/fetchSearchSuggestions';
 import { performSearch, throttle } from '../../lib/search/search';
-import { MovieSearchAPIResponse } from '../../lib/APIResponsesTypes';
 import reducer from '../../lib/reducer/searchSuggestions';
+import SearchSuggestions from './SearchSuggestions';
+import { MAX_SUGGESTIONS } from './SearchSuggestions';
 
 type ReactFormOrMouseEvent =
   | React.FormEvent<HTMLFormElement>
@@ -17,8 +18,6 @@ type SearchBarProps = {
   includeFilterOptions?: Boolean;
   searchType?: string;
 };
-
-const MAX_SUGGESTIONS = 5;
 
 const initialState = {
   suggestionsQuery: '',
@@ -31,7 +30,6 @@ export default function SearchBar({
   searchType,
 }: SearchBarProps) {
   const searchText = useRef<HTMLInputElement>(null);
-  const suggestionsList = useRef<HTMLUListElement>(null);
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -89,44 +87,6 @@ export default function SearchBar({
             onChange={(e) => throttle(e.target.value, dispatch)}
             onKeyDown={(e) => onKeyDown(e, suggestionsCount)}
           />
-          {suggestionsCount > 0 && (
-            <div className="bg-baby-powder border border-solid w-full h-34 absolute top-12 z-10 rounded shadow-lg">
-              <ul
-                className="leading-7 text-base font-alternative"
-                ref={suggestionsList}
-              >
-                {(suggestions.data as MovieSearchAPIResponse).Search.slice(
-                  0,
-                  MAX_SUGGESTIONS
-                ).map((suggestion, index) => (
-                  <Link
-                    to={`../movie/${suggestion.imdbID}`}
-                    onFocus={() =>
-                      dispatch({
-                        type: 'tabbed_on_suggestion',
-                        payload: index,
-                      })
-                    }
-                  >
-                    <li
-                      onMouseEnter={() =>
-                        dispatch({
-                          type: 'hovered_on_suggestion',
-                          payload: index,
-                        })
-                      }
-                      className={`px-3 text-ellipsis overflow-hidden whitespace-nowrap ${
-                        index === state.activeSuggestionIndex &&
-                        `bg-middle-gray text-baby-powder text-bold`
-                      } `}
-                    >
-                      {suggestion.Title}
-                    </li>
-                  </Link>
-                ))}
-              </ul>
-            </div>
-          )}
           <button
             className="btn inline-block px-6 py-2.5 bg-black text-baby-powder font-medium text-xs leading-tight uppercase rounded-r-lg shadow-md hover:bg-bistre border-black border-solid border-2 hover:border-sizzling-red focus:border-sizzling-red hover:shadow-lg focus:bg-bistre focus:shadow-lg focus:outline-none focus:ring-0 active:bistre active:shadow-lg transition duration-150 ease-in-out items-center"
             type="submit"
@@ -135,13 +95,18 @@ export default function SearchBar({
             <span className="sr-only">Search</span>
             {/* Show text instead of icon for screen readers */}
           </button>
+          {suggestionsCount > 0 && (
+            <SearchSuggestions
+              suggestions={suggestions.data}
+              activeSuggestionIndex={state.activeSuggestionIndex}
+              dispatch={dispatch}
+            />
+          )}
         </div>
 
-        <>
-          {includeFilterOptions && (
-            <SearchFilters searchType={searchType} onFilterClick={onSubmit} />
-          )}
-        </>
+        {includeFilterOptions && (
+          <SearchFilters searchType={searchType} onFilterClick={onSubmit} />
+        )}
       </form>
     </div>
   );
