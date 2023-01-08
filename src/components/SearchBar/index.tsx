@@ -54,6 +54,9 @@ export default function SearchBar({
     } else if (e.key === 'ArrowDown') {
       dispatch({ type: 'pressed_key_down', payload: { suggestionsCount } });
     } else if (e.key === 'Enter') {
+      if (state.activeSuggestionIndex < 0) {
+        return;
+      }
       navigate(
         `../movie/${
           suggestions.data.Search[state.activeSuggestionIndex].imdbID

@@ -30,6 +30,7 @@ export default function SearchSuggestions({
         {suggestions.Search.slice(0, MAX_SUGGESTIONS).map(
           (suggestion, index) => (
             <Link
+              key={suggestion.imdbID}
               to={`../movie/${suggestion.imdbID}`}
               onFocus={() =>
                 dispatch({
